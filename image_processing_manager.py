@@ -1,172 +1,168 @@
 import numpy as np
 import cv2
 
-class PaintTools:
+class ImageProcessingManager():
+  """
+    Esta libreria contiene la implementación de los procesos internos del
+    Editor de Imagenes.
+    Desarrollador por: 
+  """
+
+  DEFAULT_WIDTH = 512
+  DEFAULT_HEIGHT = 512
+
+  def __init__(self):
+    super(ImageProcessingManager, self).__init__()
+
+    # Por defecto tenemos una imagen blanca en la pila.
+    initial_matrix = np.ones((self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT, 3), np.uint8) * 255
+    
+    # Estructura de imagenes
+    self.stack_images = [initial_matrix]
+    
+    # Estructura de puntos/lineas
+    self.stack_lines = []
+  
+  def rgb_to_hex(self, rgb):
     """
-    Esta clase maneja las herramientas de dibujo del editor de imágenes.
+      Conversor de un string hexadecimal a arreglos.
+      Fuente: https://www.codespeedy.com/convert-rgb-to-hex-color-code-in-python/
+    """
+    return '%02x%02x%02x' % rgb
+
+  def last_image(self):
+    """
+      NO ALTERAR ESTA FUNCION
+      Obtenemos la ultima imagen de nuestra estructura.
+    """
+    return self.stack_images[-1]
+
+  def can_undo(self):
+    """
+      NO ALTERAR ESTA FUNCION
+      Determinamos si la aplicación puede eliminar
+      elementos de la pila.
+      Debe haber por lo menos más de un elemento para que 
+      se pueda deshacer la imagen
+    """
+    return len(self.stack_images) > 1
+
+  def has_changes(self):
+    """
+      NO ALTERAR ESTA FUNCION
+      Determinamos si la aplicación contiene
+      elementos de la pila.
+    """
+    return len(self.stack_images) > 1
+
+  def add_image(self, image_path):
+    """
+      Leemos una imagen con OpenCV
+      Redimensionamos segun los parametros: DEFAULT_WIDTH y DEFAULT_HEIGHT
+      Agregamos una nueva imagen redimensionada en la pila.
+
+      Obs: No te olvides de vaciar las colecciones antes de cargar la imagen.
+    """
+    pass
+
+  def save_image(self, filename):
+    """
+       Guardamos la ultima imagen
+    """
+    # TU IMPLEMENTACION AQUI
+    pass
+
+  def undo_changes(self):
+    """
+      Eliminamos el ultimo elemento guardado.
+    """
+    pass
+
+
+  def save_points(self, x1, y1, x2, y2, line_width, color):
+    """
+      Guardamos informacion de los puntos aqui en self.stack_lines.
+    """
+    # TU IMPLEMENTACION AQUI
+    pass
+
+
+  def add_lines_to_image(self):
+    """
+      Creamos una matriz, con un conjunto de lineas.
+      Estas lineas se obtienen de self.stack_lines.
+
+      Finalmente guardamos a nuestra pila de imagenes: self.stack_images.
+
+      Ayuda: ver documentacion de "cv2.line" para dibujar lineas en una matriz
+      Ayuda 2: no se olviden de limpiar self.stack_lines
+      Ayuda 3: utilizar el metodo rgb_to_hex para convertir los colores
+    """
+    # TU IMPLEMENTACION AQUI
+    pass
+
+  def black_and_white_image(self):
+    """
+      Hacemos una copia de la ultima imagen.
+      La Convertimos covertimos a blanco y negro.
+      Guardamos a la estructura self.stack_images
+      Retornamos la imagen procesada.
+    """
+    last = self.stack_images[-1].copy()
+    # TU IMPLEMENTACION AQUI
+    return last
+
+  def negative_image(self):
+    """
+      Hacemos una copia de la ultima imagen.
+      Calculamos el negativo de la imagen.
+      Guardamos a la estructura self.stack_images
+      Retornamos la imagen procesada.
     """
 
-    def __init__(self, default_width=512, default_height=512):
-        """
-        Inicializa la estructura con una imagen en blanco y las listas necesarias.
-        """
-        self.DEFAULT_WIDTH = default_width
-        self.DEFAULT_HEIGHT = default_height
-        
-        # Imagen inicial en blanco
-        initial_matrix = np.ones((self.DEFAULT_WIDTH, self.DEFAULT_HEIGHT, 3), np.uint8) * 255
-        
-        # Pilas de imágenes y líneas
-        self.stack_images = [initial_matrix]
-        self.stack_lines = []
+    last = self.stack_images[-1].copy()
+    # TU IMPLEMENTACION AQUI
+    return last
 
-    def save_points(self, x1, y1, x2, y2, line_width, color):
-        """
-        Guarda la información de una línea en la pila de líneas.
-        """
-        pass
-
-    def add_lines_to_image(self):
-        """
-        Dibuja todas las líneas almacenadas en la pila sobre la imagen actual.
-        Guarda la imagen modificada en la pila de imágenes.
-        """
-        pass
-
-    def add_image(self, image_path):
-        """
-        Carga una imagen desde un archivo, la redimensiona y la agrega a la pila de imágenes.
-        Se eliminan los elementos previos en las pilas de imágenes y líneas.
-        """
-        pass
-
-    def save_image(self, filename):
-        """
-        Guarda la imagen actual en el archivo especificado.
-        """
-        pass
-
-    def undo_changes(self):
-        """
-        Elimina la última imagen agregada si hay más de una en la pila.
-        """
-        pass
-
-
-class ImageFilters:
+  def global_equalization_image(self):
     """
-    Esta clase maneja los filtros y mejoras de imágenes.
+      Hacemos una copia de la ultima imagen.
+      Equalizamos la imagen.
+      Guardamos a la estructura self.stack_images
+      Retornamos la imagen procesada.
     """
 
-    def __init__(self, stack_images):
-        """
-        Recibe la pila de imágenes desde PaintTools.
-        """
-        self.stack_images = stack_images
+    last = self.stack_images[-1].copy()
+    # TU IMPLEMENTACION AQUI
+    return last
 
-    def black_and_white_image(self):
-        """
-        Convierte la última imagen a blanco y negro y la guarda en la pila.
-        Retorna la imagen procesada.
-        """
-        last = self.stack_images[-1].copy()
-        return last
-
-    def negative_image(self):
-        """
-        Convierte la última imagen a negativo y la guarda en la pila.
-        Retorna la imagen procesada.
-        """
-        last = self.stack_images[-1].copy()
-        return last
-
-    def global_equalization_image(self):
-        """
-        Aplica ecualización global de histograma a la última imagen.
-        Guarda la imagen en la pila y la retorna.
-        """
-        last = self.stack_images[-1].copy()
-        return last
-
-    def CLAHE_equalization_image(self, grid=(8, 8), clipLimit=2.0):
-        """
-        Aplica ecualización adaptativa (CLAHE) a la última imagen.
-        Guarda la imagen en la pila y la retorna.
-        """
-        last = self.stack_images[-1].copy()
-        return last
-
-    def contrast_and_brightness_processing_image(self, alpha, beta):
-        """
-        Ajusta el contraste y brillo de la última imagen según los parámetros alpha y beta.
-        Guarda la imagen en la pila y la retorna.
-        """
-        last = self.stack_images[-1].copy()
-        return last
-
-
-class ImageProcessingManager:
+  def CLAHE_equalization_image(self, grid=(8, 8), clipLimit=2.0):
     """
-    Clase principal que coordina las herramientas de dibujo (PaintTools)
-    y los filtros de imagen (ImageFilters).
+      Hacemos una copia de la ultima imagen.
+      Equalizamos la imagen usando el algoritmo de CLAHE.
+      Guardamos a la estructura self.stack_images
+      Retornamos la imagen procesada.
     """
+    last = self.stack_images[-1].copy()
+    # TU IMPLEMENTACION AQUI
+    return last
 
-    def __init__(self):
-        """
-        Inicializa el sistema con PaintTools e ImageFilters.
-        """
-        self.paint_tools = PaintTools()
-        self.image_filters = ImageFilters(self.paint_tools.stack_images)
+  def contrast_and_brightness_processing_image(self, alpha, beta):
+    """
+      Hacemos una copia de la ultima imagen.
+      Ajustamos la imagen segun parametros alpha y beta.
+      Guardamos a la estructura self.stack_images
+      Retornamos la imagen procesada.
 
-    def last_image(self):
-        """
-        NO ALTERAR ESTA FUNCIÓN.
-        Retorna la última imagen de la pila.
-        """
-        return self.paint_tools.stack_images[-1]
+      Fuente teorica: http://szeliski.org/Book/drafts/SzeliskiBook_20100903_draft.pdf
+      Pagina 103
 
-    def can_undo(self):
-        """
-        NO ALTERAR ESTA FUNCIÓN.
-        Verifica si es posible deshacer cambios en la pila de imágenes.
-        """
-        return len(self.paint_tools.stack_images) > 1
+      OpenCV:
+      https://docs.opencv.org/3.4/d3/dc1/tutorial_basic_linear_transform.html
 
-    def has_changes(self):
-        """
-        NO ALTERAR ESTA FUNCIÓN.
-        Verifica si existen cambios en la pila de imágenes.
-        """
-        return len(self.paint_tools.stack_images) > 1
-
-    # Métodos delegados a PaintTools
-    def save_points(self, x1, y1, x2, y2, line_width, color):
-        return self.paint_tools.save_points(x1, y1, x2, y2, line_width, color)
-
-    def add_lines_to_image(self):
-        return self.paint_tools.add_lines_to_image()
-
-    def add_image(self, image_path):
-        return self.paint_tools.add_image(image_path)
-
-    def save_image(self, filename):
-        return self.paint_tools.save_image(filename)
-
-    def undo_changes(self):
-        return self.paint_tools.undo_changes()
-
-    # Métodos delegados a ImageFilters
-    def black_and_white_image(self):
-        return self.image_filters.black_and_white_image()
-
-    def negative_image(self):
-        return self.image_filters.negative_image()
-
-    def global_equalization_image(self):
-        return self.image_filters.global_equalization_image()
-
-    def CLAHE_equalization_image(self, grid=(8, 8), clipLimit=2.0):
-        return self.image_filters.CLAHE_equalization_image(grid, clipLimit)
-
-    def contrast_and_brightness_processing_image(self, alpha, beta):
-        return self.image_filters.contrast_and_brightness_processing_image(alpha, beta)
+      Función en OpenCV:
+      https://docs.opencv.org/2.4/modules/core/doc/operations_on_arrays.html#convertscaleabs
+    """
+    last = self.stack_images[-1].copy()
+    # TU IMPLEMENTACION AQUI
+    return last
